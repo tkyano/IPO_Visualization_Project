@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>About - IPO Analysis</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <nav>
+        <div class="logo">IPO Insights</div>
+        <ul>
+            <li><a href="index.html">Home</a></li>
+            <li><a href="distribution.html">Distribution</a></li>
+            <li><a href="boxplot.html">Box Plot</a></li>
+            <li><a href="scatter.html">Scatter</a></li>
+            <li><a href="cumulative.html">Cumulative</a></li>
+            <li><a href="about.html">About</a></li>
+        </ul>
+    </nav>
+
+    <div class="container">
+        <div class="chart-card">
+            <h1>About This Project</h1>
+            
+            <h2>Purpose</h2>
+            <p>The purpose of this project is to inform viewers about short-term stock price behavior immediately following Initial Public Offerings (IPOs). By focusing on firms that are currently members of the S&P 500, this dashboard visualizes patterns in early price movements—from Day 1 "pops" to the completion of the first month of trading—to assess common traits among firms that achieve large-cap status.</p>
+            
+            <h2>Dataset & Sources</h2>
+            <p>The data used in this analysis was sourced via Yahoo Finance and contains historical pricing for current S&P 500 constituents. You can access the raw datasets and documentation via the link below:</p>
+            
+            <div style="margin-top: 15px;">
+                <a href="https://drive.google.com/drive/folders/1D3uAfVpuE82jQf5nbM5esYBGyTr3EmMw?usp=drive_link" target="_blank" class="btn-primary" style="text-decoration: none; font-size: 0.85rem; display: inline-block;">
+                    View Project Data on Google Drive
+                </a>
+            </div>
+
+            <h2 style="margin-top: 2.5rem;">Target Audience</h2>
+            <p>This visualization project is designed for:</p>
+            <ul>
+                <li>Students in finance or related fields looking to study market entry patterns.</li>
+                <li>Individuals interested in stock markets and IPO performance.</li>
+                <li>General viewers seeking to better understand early-stage stock price behavior.</li>
+            </ul>
+
+            <h2>Methodology</h2>
+            <p>This analysis calculates returns by comparing the Initial Public Offering (IPO) opening price to subsequent closing prices. Day 1 Return represents the percentage change from the first day's open to the first day's close. Month 1 Return represents the change from the initial opening price to the closing price at the end of the first month (approximately 21–23 trading days). Sectors are defined based on the classifications provided in the S&P 500 constituent data.</p>
+        </div>
+    </div>
+
+    <script src="nav.js"></script>
+</body>
+</html>

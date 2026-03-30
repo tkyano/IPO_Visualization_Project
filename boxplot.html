@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Box Plot - Sector Variance</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+</head>
+<body>
+    <nav>
+        <div class="logo">IPO Insights</div>
+        <ul>
+            <li><a href="index.html">Home</a></li>
+            <li><a href="distribution.html">Distribution</a></li>
+            <li><a href="boxplot.html">Box Plot</a></li>
+            <li><a href="scatter.html">Scatter</a></li>
+            <li><a href="cumulative.html">Cumulative</a></li>
+            <li><a href="about.html">About</a></li>
+        </ul>
+    </nav>
+
+    <div class="container">
+        <h1>Sector Return Variance</h1>
+        <div class="chart-card">
+            <div class="control-group">
+                <span class="control-label">Filter Sectors (Multi-Select)</span>
+                <div class="sector-grid">
+                    <button class="sector-btn active" onclick="filterSector('All', this)">All</button>
+                    <button class="sector-btn" onclick="filterSector('Information Technology', this)">Information Technology</button>
+                    <button class="sector-btn" onclick="filterSector('Health Care', this)">Health Care</button>
+                    <button class="sector-btn" onclick="filterSector('Financials', this)">Financials</button>
+                    <button class="sector-btn" onclick="filterSector('Consumer Discretionary', this)">Consumer Discretionary</button>
+                    <button class="sector-btn" onclick="filterSector('Consumer Staples', this)">Consumer Staples</button>
+                    <button class="sector-btn" onclick="filterSector('Industrials', this)">Industrials</button>
+                    <button class="sector-btn" onclick="filterSector('Energy', this)">Energy</button>
+                    <button class="sector-btn" onclick="filterSector('Materials', this)">Materials</button>
+                    <button class="sector-btn" onclick="filterSector('Real Estate', this)">Real Estate</button>
+                    <button class="sector-btn" onclick="filterSector('Communication Services', this)">Communication Services</button>
+                    <button class="sector-btn" onclick="filterSector('Utilities', this)">Utilities</button>
+                </div>
+            </div>
+            <div id="viz" class="viz-container">Loading Box Plot...</div>
+        </div>
+    </div>
+
+    <script src="nav.js"></script>
+    <script src="filters.js"></script>
+    <script src="charts/boxplot.js"></script>
+</body>
+</html>
