@@ -5,7 +5,6 @@
     <title>IPO Analysis - Scatter Plot</title>
     <link rel="stylesheet" href="styles.css">
     <script src="https://d3js.org/d3.v4.min.js"></script>
-
 </head>
 <body>
     <nav>
@@ -20,67 +19,75 @@
         </ul>
     </nav>
 
-    <div class="container">
-        <h1>Performance Correlation</h1>
-        <div class="chart-card">
-            <div class="controls" style="display: flex; gap: 20px; align-items: flex-end; border-bottom: 1px solid #eee; padding-bottom: 20px; margin-bottom: 20px;">
-                <div style="flex:1">
-                    <span class="control-label">X Axis Variable</span>
-                    <select id="x-axis" class="axis-select" onchange="updateScatterAxes()">
-                        <option value="IPO_Day_Return_Pct">Day 1 Return %</option>
-                        <option value="IPO_Open">IPO Open Price</option>
-                    </select>
-                </div>
-                <div style="font-weight: bold; color: var(--accent-color); padding-bottom: 8px;">VS</div>
-                <div style="flex:1">
-                    <span class="control-label">Y Axis Variable</span>
-                    <select id="y-axis" class="axis-select" onchange="updateScatterAxes()">
-                        <option value="Month_Return_Pct">Month 1 Return %</option>
-                        <option value="IPO_Day_Return_Pct">Day 1 Return %</option>
-                        <option value="Month_End_Close">Month End Close</option>
-                    </select>
-                </div>
-            </div>
+    <div class="container" style="position: relative;">
+        <button class="nav-arrow left" id="left-arrow" onclick="moveSlide(-1)" style="display: none;">&#10094;</button>
+        <button class="nav-arrow right" id="right-arrow" onclick="moveSlide(1)">&#10095;</button>
 
-            <div class="control-group">
-                <span class="control-label">Filter Sectors</span>
-                <div class="sector-grid">
-                    <button class="sector-btn active" onclick="filterSector('All', this)">All</button>
-                    <button class="sector-btn" onclick="filterSector('Information Technology', this)">Information Technology</button>
-                    <button class="sector-btn" onclick="filterSector('Health Care', this)">Health Care</button>
-                    <button class="sector-btn" onclick="filterSector('Financials', this)">Financials</button>
-                    <button class="sector-btn" onclick="filterSector('Consumer Discretionary', this)">Consumer Discretionary</button>
-                    <button class="sector-btn" onclick="filterSector('Consumer Staples', this)">Consumer Staples</button>
-                    <button class="sector-btn" onclick="filterSector('Industrials', this)">Industrials</button>
-                    <button class="sector-btn" onclick="filterSector('Energy', this)">Energy</button>
-                    <button class="sector-btn" onclick="filterSector('Materials', this)">Materials</button>
-                    <button class="sector-btn" onclick="filterSector('Real Estate', this)">Real Estate</button>
-                    <button class="sector-btn" onclick="filterSector('Communication Services', this)">Communication Services</button>
-                    <button class="sector-btn" onclick="filterSector('Utilities', this)">Utilities</button>
+        <div class="slider-window">
+            <div class="slider-track" id="main-track" style="display: flex; width: 200%; transition: transform 0.6s ease-in-out;">
+                
+                <div class="slide" style="width: 50%; flex-shrink: 0; box-sizing: border-box; padding: 0 10px;">
+                    <h1>Performance Correlation</h1>
+                    <div class="chart-card">
+                        <div class="controls-row">
+                            <div class="control-item">
+                                <span class="control-label">X Axis</span>
+                                <select id="x-axis" class="axis-select" onchange="updateScatterAxes()">
+                                    <option value="IPO_Day_Return_Pct">Day 1 Return %</option>
+                                    <option value="IPO_Open">IPO Open Price</option>
+                                </select>
+                            </div>
+                            <div class="control-item">
+                                <span class="control-label">Y Axis</span>
+                                <select id="y-axis" class="axis-select" onchange="updateScatterAxes()">
+                                    <option value="Month_Return_Pct">Month 1 Return %</option>
+                                    <option value="IPO_Day_Return_Pct">Day 1 Return %</option>
+                                    <option value="Month_End_Close">Month End Close</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="control-group">
+                            <span class="control-label">Filter Sectors</span>
+                            <div class="sector-grid">
+                                <button class="sector-btn active" onclick="filterSector('All', this)">All</button>
+                                <button class="sector-btn" onclick="filterSector('Technology', this)">Information Technology</button>
+                                <button class="sector-btn" onclick="filterSector('Healthcare', this)">Health Care</button>
+                                <button class="sector-btn" onclick="filterSector('Financial Services', this)">Financials</button>
+                                <button class="sector-btn" onclick="filterSector('Consumer Cyclical', this)">Consumer Discretionary</button>
+                                <button class="sector-btn" onclick="filterSector('Consumer Defensive', this)">Consumer Staples</button>
+                                <button class="sector-btn" onclick="filterSector('Basic Materials', this)">Materials</button>
+                                <button class="sector-btn" onclick="filterSector('Industrials', this)">Industrials</button>
+                                <button class="sector-btn" onclick="filterSector('Energy', this)">Energy</button>
+                                <button class="sector-btn" onclick="filterSector('Real Estate', this)">Real Estate</button>
+                                <button class="sector-btn" onclick="filterSector('Communication Services', this)">Communication Services</button>
+                                <button class="sector-btn" onclick="filterSector('Utilities', this)">Utilities</button>
+                            </div>
+                        </div>
+                        <div id="viz" class="viz-container"></div>
+                    </div>
                 </div>
+
+                <div class="slide" style="width: 50%; flex-shrink: 0; box-sizing: border-box; padding: 0 10px;">
+                    <h1>Company Deep-Dive</h1>
+                    <div class="chart-card">
+                        <div class="control-group">
+                            <span class="control-label">Search Ticker or Name</span>
+                            <div style="display: flex; gap: 10px;">
+                                <input type="text" id="company-search-input" placeholder="e.g. AAPL or Apple" style="padding: 12px; flex: 1; border: 1px solid #ddd; border-radius: 4px;">
+                                <button class="btn-primary" onclick="executeCompanySearch()">Search</button>
+                            </div>
+                        </div>
+                        <div id="search-result-display">
+                            <p style="text-align: center; color: #666; padding: 50px 0;">Enter a ticker to see performance metrics.</p>
+                        </div>
+                    </div>
+                </div>
+
             </div>
-            <div id="viz" class="viz-container">Loading Scatter Plot...</div>
         </div>
     </div>
 
-    <footer>
-        <div class="footer-content">
-            <div class="footer-left">
-                <span>Timothy Kyano</span>
-                <span class="separator">|</span>
-                <span>CSCE 567</span>
-            </div>
-            <div class="footer-right">
-                <a href="https://github.com/tkyano/IPO_Visualization_Project" target="_blank">
-                    <svg class="github-icon" viewBox="0 0 24 24">
-                        <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.041-1.416-4.041-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
-                    </svg>
-                    GitHub Repo
-                </a>
-            </div>
-        </div>
-    </footer>
-    
     <script src="nav.js"></script>
     <script src="filters.js"></script>
     <script src="charts/scatter.js"></script>

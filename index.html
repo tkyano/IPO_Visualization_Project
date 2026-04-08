@@ -21,15 +21,41 @@
     <div class="container">
         <header style="text-align: center; padding: 3rem 0;">
             <h1>S&P 500 IPO Performance</h1>
-            <p>Visualizing early market behavior of the world's leading firms.</p>
+            <p>Analysis of first-month returns and sector trends for current S&P 500 constituents.</p>
         </header>
 
         <div class="chart-card">
-            <h2>Welcome to the Dashboard</h2>
-            <p>Analyze how the biggest names in the S&P 500 performed in their first 30 days of public trading. Explore distributions, sector variances, and performance relationships.</p>
-            <button class="btn-primary" onclick="window.location.href='distribution.html'">Go!</button>
+            <h2>Market Snapshot: S&P 500 IPOs</h2>
+            <p style="margin-bottom: 25px;">Live analysis of S&P 500 constituent data as of March 1, 2026.</p>
+            
+            <div class="stats-grid">
+                <div class="stat-box">
+                    <span class="control-label">Total Companies</span>
+                    <div id="stat-universe" class="stat-number">--</div>
+                    <div class="stat-desc">Tracked S&P 500 Stocks</div>
+                </div>
+
+                <div class="stat-box">
+                    <span class="control-label">Sectors Tracked</span>
+                    <div id="stat-sectors" class="stat-number">--</div>
+                    <div class="stat-desc">Full GICS Classification</div>
+                </div>
+
+                <div class="stat-box">
+                    <span class="control-label">Avg. Day 1 Return</span>
+                    <div id="stat-avg-return" class="stat-number">--</div>
+                    <div class="stat-desc">Mean First Day Return</div>
+                </div>
+
+                <div class="stat-box">
+                    <span class="control-label">Record High</span>
+                    <div id="stat-max-return" class="stat-number">--</div>
+                    <div class="stat-desc">Highest Single Day Return</div>
+                </div>
+            </div>
         </div>
-    </div>
+</div>
+
     <footer>
         <div class="footer-content">
             <div class="footer-left">
@@ -48,6 +74,8 @@
         </div>
     </footer>
 
+    <script src="https://d3js.org/d3.v4.min.js"></script>
     <script src="nav.js"></script>
+    <script src="home.js"></script>
 </body>
 </html>

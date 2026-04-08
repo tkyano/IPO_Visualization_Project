@@ -41,9 +41,7 @@ d3.csv("data/sp500_ipo_summary.csv", function(error, data) {
             .domain([minVal, maxVal])
             .thresholds(20)(filteredData);
 
-        var points = bins.map(function(d){ return [d.x0, d.length]; });
-
-        var maxy = d3.max(points, function(d){ return d[1]; }) || 10;
+        var maxy = d3.max(bins, function(d){ return d.length; }) || 10;
 
         var yscale = d3.scaleLinear()
             .domain([0, maxy])
@@ -62,32 +60,34 @@ d3.csv("data/sp500_ipo_summary.csv", function(error, data) {
             .call(d3.axisBottom(xscale));
 
         svg.selectAll("rect")
-            .data(points)
+            .data(bins)
             .enter()
             .append("rect")
-            .attr("x", function(d) { return buffer + xscale(d[0]); })
-            .attr("y", function(d) { return buffer + yscale(d[1]); })
-            .attr("width", Math.max(0, (width - 2 * buffer) / points.length - 1))
-            .attr("height", function(d) { return (height - 2 * buffer) - yscale(d[1]); })
+            .attr("x", function(d) { return buffer + xscale(d.x0); })
+            .attr("y", function(d) { return buffer + yscale(d.length); })
+            .attr("width", function(d) { 
+                return Math.max(0, xscale(d.x1) - xscale(d.x0)); 
+            })
+            .attr("height", function(d) { return (height - 2 * buffer) - yscale(d.length); })
             .attr("fill", "#d32f2f")
             .attr("stroke", "white")
+            .attr("stroke-width", "1px")
             .on("mouseover", function() { d3.select(this).style("fill", "black"); })
             .on("mouseout", function() { d3.select(this).style("fill", "#d32f2f"); })
 
 
         svg.selectAll(".bar-label")
-            .data(points)
+            .data(bins)
             .enter()
             .append("text")
             .attr("style", "font-family: arial; font-size: 12px; fill: #d32f2f;")
             // logic: start of bar + (total bar width / 2)
             .attr("x", function(d) { 
-                var barWidth = (width - 2 * buffer) / points.length;
-                return buffer + xscale(d[0]) + (barWidth / 2); 
+                return buffer + xscale(d.x0) + (xscale(d.x1) - xscale(d.x0)) / 2; 
             })
-            .attr("y", function(d) { return buffer + yscale(d[1]) - 5; })
+            .attr("y", function(d) { return buffer + yscale(d.length) - 5; })
             .attr("text-anchor", "middle") // This ensures the text itself is centered on that point
-            .text(function(d) { return d[1] > 0 ? d[1] : ""; });
+            .text(function(d) { return d.length > 0 ? d.length : ""; });
 
     };
 
