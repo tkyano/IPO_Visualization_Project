@@ -69,17 +69,15 @@
                 </div>
 
                 <div class="slide" style="width: 50%; flex-shrink: 0; box-sizing: border-box; padding: 0 10px;">
-                    <h1>Company Deep-Dive</h1>
+                    <h1>Company Statistics</h1>
                     <div class="chart-card">
                         <div class="control-group">
-                            <span class="control-label">Search Ticker or Name</span>
+                            <span class="control-label">Search Company Name</span>
                             <div style="display: flex; gap: 10px;">
-                                <input type="text" id="company-search-input" placeholder="e.g. AAPL or Apple" style="padding: 12px; flex: 1; border: 1px solid #ddd; border-radius: 4px;">
-                                <button class="btn-primary" onclick="executeCompanySearch()">Search</button>
-                            </div>
+                                <input type="text"  id="company-search-input" oninput="executeLiveSearch()" placeholder="e.g. Apple" style="padding: 12px; flex: 1; border: 1px solid #ddd; border-radius: 4px;"> <button class="btn-primary" onclick="executeCompanySearch()">Search</button>                            </div>
                         </div>
                         <div id="search-result-display">
-                            <p style="text-align: center; color: #666; padding: 50px 0;">Enter a ticker to see performance metrics.</p>
+                            <p style="text-align: center; color: #666; padding: 50px 0;">Search by Company Name.</p>
                         </div>
                     </div>
                 </div>
