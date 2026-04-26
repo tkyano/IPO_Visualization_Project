@@ -22,19 +22,14 @@
     <div class="container">
         <h1>IPO Return Distribution</h1>
 
-        <div class="chart-card" style="margin-bottom: 10px; border-left: 5px solid var(--accent-color);">
-            <div class="chart-explanation">
-                <p style="margin: 0 0 12px 0; font-size: 1rem; color: #444; line-height: 1.5;">
-                    This histogram shows the frequency of Day 1 Returns (the "IPO Pop"). 
-                    By binning the returns, we can see if the market tends to underprice IPOs (skewing right) or if most companies trade flat on their first day.
-                </p>
-                <div style="font-size: 0.75rem; color: #888; display: flex; gap: 20px; border-top: 1px solid #eee; padding-top: 10px;">
-                    <span><strong>Source:</strong> <a href="https://observablehq.com/@d3/histogram/2" target="_blank" style="color: var(--accent-color); text-decoration: none; font-weight: bold;">Observable D3 Histogram</a></span>
-                    <span><strong>Data:</strong> S&P 500 Constituent IPO Dates</span>
-                </div>
+        <div class="explanation-box">
+            <p>
+                This histogram is designed to measure pricing efficiency. In a perfectly efficient market, most IPOs would cluster near 0%. By viewing the skew of this distribution, you can determine if underwriters consistently underprice offerings (leaving "money on the table") or if the market frequently rejects initial valuations.
+            </p>
+            <div class="source-footer">
+                <span><strong>Source:</strong> <a href="https://observablehq.com/@d3/histogram/2" target="_blank">Observable D3 Histogram</a></span>
             </div>
         </div>
-
         <div class="chart-card">
             <div class="control-group">
                 <span class="control-label">Filter Sectors (Multi-Select)</span>
