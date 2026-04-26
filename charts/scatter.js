@@ -221,34 +221,39 @@ function executeLiveSearch() {
 function renderCompanyDeepDive(result) {
     const display = document.getElementById('search-result-display');
     
+    // SMART FORMATTER: 
+    // If the price is tiny (likely an old, heavily split stock), show more decimals.
+    // This signals to the user that this is a calculated/adjusted value.
+    const formatPrice = (val) => {
+        const p = +val;
+        if (p < 0.1) return p.toFixed(4); // e.g. 0.0983
+        if (p < 1.0) return p.toFixed(3); // e.g. 0.855
+        return p.toFixed(2);             // e.g. 45.50
+    };
+
     display.innerHTML = `
-        <div class="stat-box" style="margin-top: 20px; border-left: 5px solid var(--accent-color); padding: 20px; background: #f9f9f9; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.05);">
-            <h2 style="margin-top:0; color: #333;">${result.Name} (${result.Ticker})</h2>
-            <div style="display: flex; flex-direction: column; gap: 20px;">
-                
-                <p style="font-size: 1.1em; margin-bottom: 5px;"><strong>Sector:</strong> ${result.Sector}</p>
-                
-                <div class="stats-grid" style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 25px;">
-                    <div>
-                        <span class="control-label" style="display: block; color: #666; font-size: 0.9em; margin-bottom: 5px;">IPO Open</span>
-                        <div class="stat-number" style="font-size: 1.6em; font-weight: bold;">$${(+result.IPO_Open).toFixed(2)}</div>
-                    </div>
-                    <div>
-                        <span class="control-label" style="display: block; color: #666; font-size: 0.9em; margin-bottom: 5px;">Day 1 Return</span>
-                        <div class="stat-number" style="font-size: 1.6em; font-weight: bold; color: ${+result.IPO_Day_Return_Pct >= 0 ? '#2e7d32' : '#d32f2f'}">
-                            ${(+result.IPO_Day_Return_Pct).toFixed(2)}%
-                        </div>
-                    </div>
-                    <div>
-                        <span class="control-label" style="display: block; color: #666; font-size: 0.9em; margin-bottom: 5px;">Month End Close</span>
-                        <div class="stat-number" style="font-size: 1.6em; font-weight: bold;">$${(+result.Month_End_Close).toFixed(2)}</div>
-                    </div>
-                    <div>
-                        <span class="control-label" style="display: block; color: #666; font-size: 0.9em; margin-bottom: 5px;">Month 1 Return</span>
-                        <div class="stat-number" style="font-size: 1.6em; font-weight: bold; color: ${+result.Month_Return_Pct >= 0 ? '#2e7d32' : '#d32f2f'}">
-                            ${(+result.Month_Return_Pct).toFixed(2)}%
-                        </div>
-                    </div>
+        <div class="stat-box" style="margin-top: 20px; border-left: 5px solid var(--accent-color); padding: 20px; background: #f9f9f9;">
+            <h2 style="margin-top:0;">${result.Name} (${result.Ticker})</h2>
+            <p style="margin-bottom: 20px; color: #666; font-style: italic;">
+                Note: Prices are split-adjusted to modern share values for fair comparison.
+            </p>
+            
+            <div class="stats-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                <div>
+                    <span class="control-label">IPO Open</span>
+                    <div class="stat-number">$${formatPrice(result.IPO_Open)}</div>
+                </div>
+                <div>
+                    <span class="control-label">Month End Close</span>
+                    <div class="stat-number">$${formatPrice(result.Month_End_Close)}</div>
+                </div>
+                <div>
+                    <span class="control-label">Day 1 Return</span>
+                    <div class="stat-number" style="color: ${+result.IPO_Day_Return_Pct >= 0 ? 'green' : 'red'}">${result.IPO_Day_Return_Pct}%</div>
+                </div>
+                <div>
+                    <span class="control-label">Month 1 Return</span>
+                    <div class="stat-number" style="color: ${+result.Month_Return_Pct >= 0 ? 'green' : 'red'}">${result.Month_Return_Pct}%</div>
                 </div>
             </div>
         </div>`;

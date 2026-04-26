@@ -1,43 +1,42 @@
-// Global state: which sectors are currently "on"
-let activeSectors = ["All"];
+// Global state
+window.currentSectors = ["All"];
 
-function filterSector(sector, element) {
-    const parent = element.parentElement;
-    const allButtons = parent.querySelectorAll('.sector-btn');
-    const allBtn = Array.from(allButtons).find(btn => btn.innerText === 'All');
-
-    if (sector === 'All') {
-        // Reset to "All" only
-        activeSectors = ["All"];
-        allButtons.forEach(btn => btn.classList.remove('active'));
-        element.classList.add('active');
+window.filterSector = function(sector, btn) {
+    const d3Btn = d3.select(btn);
+    
+    if (sector === "All") {
+        window.currentSectors = ["All"];
+        d3.selectAll(".sector-btn").classed("active", false);
+        d3Btn.classed("active", true);
     } else {
-        // 1. If we were on "All", start a fresh list
-        if (activeSectors.includes("All")) {
-            activeSectors = [];
-            if (allBtn) allBtn.classList.remove('active');
+        // Remove "All" if a specific sector is clicked
+        if (window.currentSectors.includes("All")) {
+            window.currentSectors = [];
+            d3.selectAll(".sector-btn").filter(function() {
+                return d3.select(this).text() === "All";
+            }).classed("active", false);
         }
 
-        // 2. Toggle the specific sector
-        if (activeSectors.includes(sector)) {
-            activeSectors = activeSectors.filter(s => s !== sector);
-            element.classList.remove('active');
+        const index = window.currentSectors.indexOf(sector);
+        if (index > -1) {
+            window.currentSectors.splice(index, 1);
+            d3Btn.classed("active", false);
         } else {
-            activeSectors.push(sector);
-            element.classList.add('active');
+            window.currentSectors.push(sector);
+            d3Btn.classed("active", true);
         }
 
-        // 3. Fallback: if user deselects everything, go back to "All"
-        if (activeSectors.length === 0) {
-            activeSectors = ["All"];
-            if (allBtn) allBtn.classList.add('active');
+        // Default back to All if nothing is selected
+        if (window.currentSectors.length === 0) {
+            window.currentSectors = ["All"];
+            d3.selectAll(".sector-btn").filter(function() {
+                return d3.select(this).text() === "All";
+            }).classed("active", true);
         }
     }
 
-    console.log("Active Filter Array:", activeSectors);
-
-    // This globally available function will be defined in your specific chart.js files
-    if (typeof updateChartData === "function") {
-        updateChartData(activeSectors);
+    // This is the CRITICAL line: it calls the draw function on whatever page you are on
+    if (typeof updatePlot === "function") {
+        updatePlot();
     }
-}
+};
