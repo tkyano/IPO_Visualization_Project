@@ -20,7 +20,7 @@ d3.csv("data/sp500_ipo_summary.csv", function(error, data) {
     });
 
     d3.select("#stat-universe").text(totalCompanies);
-    d3.select("#stat-sectors").text(uniqueSectors);
+    d3.select("#stat-sectors").text("11");
     d3.select("#stat-avg-return").text("+" + avgReturn.toFixed(2) + "%");
     d3.select("#stat-max-return").text(maxReturn.toFixed(1) + "%");
 });
