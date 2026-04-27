@@ -42,11 +42,23 @@ window.updatePlot = function() {
         svgBox.append("g").attr("transform", "translate(" + (totalWidthBox / 2 + marginBox.left) + "," + marginBox.top + ")"),
         "#4e79a7"
     );
+
+    svgBox.append("text")
+        .attr("text-anchor", "middle")
+        .attr("transform", "rotate(-90)")
+        .attr("x", -heightBox / 2)
+        .attr("y", 25)
+        .style("font-family", "Arial")
+        .style("font-size", "14px")
+        .style("font-weight", "bold")
+        .text("Return Percentage (%)");
 };
 
 function drawSingleBoxPlot(data, column, title, g, boxColor) {
-    // Calculate Statistics
     var values = data.map(function(d) { return +d[column]; }).sort(d3.ascending);
+    
+    if (values.length === 0) return;
+
     var q1 = d3.quantile(values, .25);
     var median = d3.quantile(values, .5);
     var q3 = d3.quantile(values, .75);
@@ -74,8 +86,8 @@ function drawSingleBoxPlot(data, column, title, g, boxColor) {
     g.append("line")
         .attr("x1", xCenter)
         .attr("x2", xCenter)
-        .attr("y1", y(min))
-        .attr("y2", y(max))
+        .attr("y1", y(Math.max(d3.min(values), min)))
+        .attr("y2", y(Math.min(d3.max(values), max)))
         .attr("stroke", "black");
 
     var boxWidth = 100;

@@ -84,4 +84,26 @@ window.updatePlot = function() {
         .attr("y", function(d) { return bufferDist + yscale(d.length) - 5; })
         .attr("text-anchor", "middle")
         .text(function(d) { return d.length > 0 ? d.length : ""; });
+
+        // X-Axis Title
+    svgDist.append("text")
+        .attr("text-anchor", "middle")
+        .attr("x", widthDist / 2)
+        .attr("y", heightDist - (bufferDist / 3))
+        .style("font-family", "Arial")
+        .style("font-size", "14px")
+        .style("font-weight", "bold")
+        .text("Day 1 Return (%)");
+
+    // Y-Axis Title
+    svgDist.append("text")
+        .attr("text-anchor", "middle")
+        .attr("transform", "rotate(-90)")
+        .attr("x", -heightDist / 2)
+        .attr("y", bufferDist / 3)
+        .style("font-family", "Arial")
+        .style("font-size", "14px")
+        .style("font-weight", "bold")
+        .text("Frequency (Number of Companies)");
+
 };

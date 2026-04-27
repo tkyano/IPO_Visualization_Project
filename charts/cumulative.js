@@ -1,4 +1,3 @@
-// --- Global State ---
 let currentSlide = 0;
 const totalSlides = 2;
 var rawData = [];
@@ -10,7 +9,6 @@ var margin = {top: 40, right: 150, bottom: 60, left: 70},
     width = 900 - margin.left - margin.right,
     height = 450 - margin.top - margin.bottom;
 
-// --- Data Loading ---
 d3.queue()
     .defer(d3.csv, "data/sp500_ipo_summary.csv")
     .defer(d3.csv, "data/sp500_first_month_data.csv")
@@ -39,7 +37,6 @@ d3.queue()
         updateCumulativePlot(); 
     });
 
-// --- Slide 1: Sector Chart ---
 window.updateCumulativePlot = function() {
     d3.select("#viz").selectAll("*").remove();
     
@@ -50,13 +47,10 @@ window.updateCumulativePlot = function() {
     var g = svg.append("g")
         .attr("transform", `translate(${margin.left},${margin.top})`);
 
-    // --- Scales ---
-    // FIX: Set X domain dynamically based on data length (usually ~21-23 days)
     var maxDay = d3.max(rawData, d => d.returns.length) || 23;
     var x = d3.scaleLinear().domain([1, maxDay]).range([0, width]);
     var y = d3.scaleLinear().range([height, 0]);
 
-    // Filter "Unknown"
     var dataBySector = d3.nest()
         .key(d => d.sector)
         .entries(rawData)
@@ -88,14 +82,31 @@ window.updateCumulativePlot = function() {
         d3.max(lines, l => d3.max(l.values, v => v.avg)) + 2
     ]);
 
-    // --- Axes ---
-    var xAxis = d3.axisBottom(x).tickFormat(d => "Day "+d);
+    var xAxis = d3.axisBottom(x).tickFormat(d => d);
     var yAxis = d3.axisLeft(y).tickFormat(d => d + "%");
 
     var gX = g.append("g").attr("transform", `translate(0,${height})`).call(xAxis);
     var gY = g.append("g").call(yAxis);
 
-    // --- Clip Path ---
+    g.append("text")
+        .attr("text-anchor", "middle")
+        .attr("x", width / 2)
+        .attr("y", height + 45)
+        .style("font-family", "Arial")
+        .style("font-size", "14px")
+        .style("font-weight", "bold")
+        .text("Days Since IPO");
+
+    g.append("text")
+        .attr("text-anchor", "middle")
+        .attr("transform", "rotate(-90)")
+        .attr("x", -height / 2)
+        .attr("y", -50)
+        .style("font-family", "Arial")
+        .style("font-size", "14px")
+        .style("font-weight", "bold")
+        .text("Cumulative Return (%)");
+
     svg.append("defs").append("clipPath")
         .attr("id", "clip")
         .append("rect")
@@ -104,13 +115,11 @@ window.updateCumulativePlot = function() {
 
     var lineContainer = g.append("g").attr("clip-path", "url(#clip)");
 
-    // --- Line Generator ---
     var lineGen = d3.line()
         .x(d => x(d.day))
         .y(d => y(d.avg))
         .curve(d3.curveMonotoneX);
 
-    // --- Drawing Lines with Hover ---
     lines.forEach((l, i) => {
         var path = lineContainer.append("path")
             .datum(l.values)
@@ -129,14 +138,11 @@ window.updateCumulativePlot = function() {
             d3.select(this).attr("stroke-width", 2.5);
         });
 
-        // Legend
         var leg = g.append("g").attr("transform", `translate(${width + 10}, ${i * 20})`);
         leg.append("rect").attr("width", 12).attr("height", 12).attr("fill", colorScale(l.label));
         leg.append("text").attr("x", 18).attr("y", 10).style("font-size", "10px").text(l.label);
     });
 
-    // --- Zoom Logic ---
-    // FIX: translateExtent prevents the chart from sliding to "Day -2"
     var zoom = d3.zoom()
         .scaleExtent([1, 8])
         .translateExtent([[0, 0], [width, height]]) 
@@ -145,7 +151,7 @@ window.updateCumulativePlot = function() {
             var newX = d3.event.transform.rescaleX(x);
             var newY = d3.event.transform.rescaleY(y);
 
-            gX.call(xAxis.scale(newX));
+            gX.call(xAxis.scale(newX).tickFormat(d => d));
             gY.call(yAxis.scale(newY));
 
             lineContainer.selectAll(".sector-line")
@@ -156,7 +162,6 @@ window.updateCumulativePlot = function() {
                 );
         });
 
-    // Zoom Capture Overlay
     g.append("rect")
         .attr("width", width)
         .attr("height", height)
@@ -165,7 +170,6 @@ window.updateCumulativePlot = function() {
         .call(zoom);
 };
 
-// --- Slide 2: Manual Search Logic ---
 function executeManualSearch() {
     const inputField = document.getElementById('company-search-input');
     const input = inputField.value.toUpperCase().trim();
@@ -220,7 +224,6 @@ function updateDeepDiveChart() {
         .attr("height", height + margin.top + margin.bottom)
         .append("g").attr("transform", `translate(${margin.left},${margin.top})`);
 
-    // FIX: Apply same dynamic maxDay for deep dive
     var maxDay = d3.max(selectedCompanies, c => c.returns.length) || 23;
     var x = d3.scaleLinear().domain([1, maxDay]).range([0, width]);
     var y = d3.scaleLinear().range([height, 0]);
@@ -229,8 +232,30 @@ function updateDeepDiveChart() {
     selectedCompanies.forEach(c => c.returns.forEach(r => allY.push(r.cumReturn)));
     y.domain([d3.min(allY) - 2, d3.max(allY) + 2]);
 
-    svg.append("g").attr("transform", `translate(0,${height})`).call(d3.axisBottom(x).tickFormat(d => "Day "+d));
+    svg.append("g")
+        .attr("transform", `translate(0,${height})`)
+        .call(d3.axisBottom(x).tickFormat(d => d));
+        
     svg.append("g").call(d3.axisLeft(y).tickFormat(d => d + "%"));
+
+    svg.append("text")
+        .attr("text-anchor", "middle")
+        .attr("x", width / 2)
+        .attr("y", height + 45)
+        .style("font-family", "Arial")
+        .style("font-size", "14px")
+        .style("font-weight", "bold")
+        .text("Days Since IPO");
+
+    svg.append("text")
+        .attr("text-anchor", "middle")
+        .attr("transform", "rotate(-90)")
+        .attr("x", -height / 2)
+        .attr("y", -50)
+        .style("font-family", "Arial")
+        .style("font-size", "14px")
+        .style("font-weight", "bold")
+        .text("Cumulative Return (%)");
 
     var lineGen = d3.line().x(d => x(d.day)).y(d => y(d.cumReturn)).curve(d3.curveMonotoneX);
 
@@ -257,7 +282,6 @@ function updateDeepDiveChart() {
     });
 }
 
-// --- Navigation & Slide Logic ---
 function moveSlide(direction) {
     currentSlide += direction;
     if (currentSlide >= totalSlides) currentSlide = totalSlides - 1;
